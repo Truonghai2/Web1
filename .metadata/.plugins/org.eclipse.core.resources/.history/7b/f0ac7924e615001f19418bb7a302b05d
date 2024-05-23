@@ -1,0 +1,8 @@
+package Controll.Service.Impl;
+
+import Controll.Dao.RoomDAO;
+import Controll.Service.RoomService;
+
+public class RoomServiceImp implements RoomService{
+	private RoomDAO roomDao;
+}

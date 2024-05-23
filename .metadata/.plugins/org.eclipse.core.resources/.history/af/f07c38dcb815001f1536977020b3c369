@@ -1,0 +1,38 @@
+package Controll.Entity;
+
+import java.sql.Timestamp;
+
+import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name="message")
+public class message {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "userId", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = { "applications", "hibernateLazyInitializer" })
+    private User user;
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "roomId", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = { "applications", "hibernateLazyInitializer" })
+	private room room;
+	
+	
+	private String body;
+	
+	@Column(name="link", nullable = true)
+	private String link;
+	
+	@Column(name="created_at")
+	@CreationTimestamp
+	private Timestamp created_at;
+}

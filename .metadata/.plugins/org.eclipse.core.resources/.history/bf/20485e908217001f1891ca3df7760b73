@@ -1,0 +1,196 @@
+package Controll.Controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Base64;
+
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import Controll.DTO.MessageDTO;
+import Controll.Entity.message;
+import Controll.Service.MessageService;
+import Controll.Service.Impl.MessageServiceImp;
+
+/**
+ * Servlet implementation class MessengerController
+ */
+
+
+@WebServlet({ "/fetchMessage", "/sendfile" })
+@MultipartConfig
+public class MessengerController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static final int perPage = 15;
+	
+	private MessageService messageService = new MessageServiceImp();
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = request.getServletPath();
+		
+		switch (path) {
+			case "/fetchMessage": 
+				doGetMessage(request, response);
+				break;
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + path);
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = request.getServletPath();
+		
+		switch (path) {
+		case "/sendfile": 
+			doPostMessage(request, response);
+			break;
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + path);
+		}
+	}
+	
+	
+	protected void doPostMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		String base64Image = request.getParameter("file");
+
+        if (base64Image != null && !base64Image.isEmpty()) {
+            String UPLOAD_DIR = request.getServletContext().getRealPath("/") + "Product_imgs";
+            byte[] decodedBytes = Base64.getDecoder().decode(base64Image.split(",")[1]);
+            String fileName = "image_" + System.currentTimeMillis() + ".png";
+            String filePath = UPLOAD_DIR + File.separator + fileName;
+            
+            try {
+                Files.createDirectories(Paths.get(UPLOAD_DIR));
+
+                try (InputStream is = new ByteArrayInputStream(decodedBytes);
+                        FileOutputStream fos = new FileOutputStream(filePath)) {
+                       byte[] buffer = new byte[1024];
+                       int length;
+                       while ((length = is.read(buffer)) != -1) {
+                           fos.write(buffer, 0, length);
+                       }
+                   }
+
+                // Phản hồi về máy khách
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("success", true);
+                jsonResponse.addProperty("fileUrl", "/Product_imgs/" + fileName); // Đường dẫn để truy cập ảnh
+                response.getWriter().write(jsonResponse.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("success", false);
+                jsonResponse.addProperty("error", "File upload failed with exception: " + e.getMessage());
+                response.getWriter().write(jsonResponse.toString());
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty("success", false);
+            jsonResponse.addProperty("error", "No file provided or file is empty.");
+            response.getWriter().write(jsonResponse.toString());
+        }
+	}
+	protected void doGetMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // Define the number of items per page
+	    
+
+	    // Fetch all messages for the given room ID
+	    List<message> allMessages = messageService.getALLMessageByRoomid(1);
+	    if (allMessages == null) {
+	        allMessages = new ArrayList<>();
+	    }
+
+	    
+	    // Calculate the maximum number of pages
+	    int maxPage = (int) Math.ceil(allMessages.size() / (double) perPage);
+
+	    // Get the page number from the request, default to 1 if not provided or invalid
+	    String pageNumberStr = request.getParameter("page");
+	    int lastPage = Integer.parseInt(pageNumberStr);
+	    
+	    if(lastPage < maxPage) {
+	    	lastPage++;
+	    }
+	    int pageNumber = 1;
+	    try {
+	        if (pageNumberStr != null) {
+	            pageNumber = Integer.parseInt(pageNumberStr);
+	            if (pageNumber > maxPage || pageNumber < 1) {
+	                pageNumber = 1;
+	            }
+	        }
+	    } catch (NumberFormatException e) {
+	        pageNumber = 1; // Default to page 1 if parsing fails
+	    }
+
+	    // Fetch the messages for the current page
+	    List<message> messages = messageService.getPerPageMessageByRoomid(1, pageNumber, perPage);
+	    if (messages == null) {
+	        messages = new ArrayList<>();
+	    }
+
+        // Convert the list of messages to a list of MessageDTOs
+        List<MessageDTO> messageDTOs = MessageDTO.objectList(messages);
+
+        // Create the JSON response object
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("total", maxPage);
+        jsonResponse.addProperty("last_page", lastPage);
+        // Add the list of MessageDTOs to the JSON response
+        JsonArray jsonMessages = new Gson().toJsonTree(messageDTOs).getAsJsonArray();
+        jsonResponse.add("messages", jsonMessages);
+        
+
+        // Set the response content type to JSON
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Convert the JSON response object to a JSON string
+        String json = new Gson().toJson(jsonResponse);
+
+        // Write the JSON response
+        response.getWriter().write(json);
+        response.getWriter().flush();
+	}
+
+}

@@ -1,0 +1,11 @@
+package Controll.Dao.Impl;
+
+import Controll.Dao.AbstactDao;
+import Controll.Dao.RoomDAO;
+import Controll.Entity.room;
+
+public class RoomDAOImp extends AbstactDao<room> implements RoomDAO {
+
+	
+	
+}

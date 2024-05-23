@@ -1,0 +1,28 @@
+package Controll.Entity;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name="message")
+public class message {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "userId", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = { "applications", "hibernateLazyInitializer" })
+    private User user;
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "roomId", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = { "applications", "hibernateLazyInitializer" })
+	private room room;
+	
+	
+	private String body;
+	private 
+}

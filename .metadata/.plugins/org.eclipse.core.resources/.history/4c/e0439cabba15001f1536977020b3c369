@@ -1,0 +1,14 @@
+package Controll.Dao;
+
+import java.util.List;
+
+import Controll.Entity.message;
+
+public interface MessageDAO {
+	
+	
+	List<message> getALLMessageByRoomid(int roomId);
+	
+	
+	message 
+}

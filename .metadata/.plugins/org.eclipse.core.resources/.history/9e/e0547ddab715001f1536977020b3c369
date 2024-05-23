@@ -1,0 +1,13 @@
+package Controll.Entity;
+
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "globalroom")
+public class room {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+}

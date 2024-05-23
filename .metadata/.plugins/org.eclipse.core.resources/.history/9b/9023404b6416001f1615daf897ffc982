@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+
+.m-send{
+	font-size: 14px;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    outline: none;
+    resize: none;
+    
+    font-family: sans-serif;
+    height: 44px;
+    max-height: 200px;
+}
+
+.handleFIle{
+	border:none;
+	padding:0;
+}
+
+.messenger-sendCard button, .messenger-sendCard button:active, .messenger-sendCard button:focus{
+	    border: none;
+    outline: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+#message-form label{
+	margin:0;
+}
+
+.wrapper{
+	z-index:100;
+}
+
+.messenger-sendCard span{
+	    margin: 9px 10px;
+    color: #bdcbd6;
+    cursor: pointer;
+    font-size: 21px;
+    transition: transform 0.15s;
+}
+
+.message-card.mc-sender .message-card-content{
+		align-items: end;
+    border-radius: 15px;
+}
+
+.message-card .message-card-content{
+	display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 75%;
+    border-radius: 15px;
+}
+
+.message-card div{
+	    margin-top: 0p
+}
+
+.message-card .message{
+	margin: 0;
+    padding: 6px 15px;
+    padding-bottom: 5px;
+    width: fit-content;
+    width: -webkit-fit-content;
+    border-radius: 20px;
+    word-break: break-word;
+    display: table-cell;
+    background-color: #ccc;
+    
+}
+
+.message-card.mc-sender .message-card-content .message{
+	background-color: #0084ff !important;
+}
+
+.message-card.mc-sender .message{
+	direction: ltr;
+    background: #ccc !important;
+}
+
+
+.message-card{
+	    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100% !important;
+    margin: 2px 5px;
+    width: calc(100% - 30px);
+    justify-content: flex-start;
+}
+
+.message-card.mc-sender{
+	justify-content: flex-end;
+}

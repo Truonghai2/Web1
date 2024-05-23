@@ -1,0 +1,27 @@
+package websocket;
+import java.io.IOException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
+import javax.websocket.Session;
+
+public class ChatRoomServerEndpoint extends Endpoint {
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+        session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String message) {
+                try {
+                    // Broadcast message to all connected clients
+                    for (Session s : session.getOpenSessions()) {
+                        if (s.isOpen()) {
+                            s.getBasicRemote().sendText(message);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+}

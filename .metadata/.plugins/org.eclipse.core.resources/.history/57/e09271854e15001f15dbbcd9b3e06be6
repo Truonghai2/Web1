@@ -1,0 +1,21 @@
+package websocket;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.server.ServerEndpoint;
+
+import java.io.IOException;
+
+/**
+ * Servlet implementation class ChatSocket
+ */
+
+@WebServlet("/chat")
+@ServerEndpoint(value = "/chat", configurator = ChatConfigurator.class)
+public class ChatSocket extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+}

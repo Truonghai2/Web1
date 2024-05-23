@@ -1,0 +1,9 @@
+package Controll.Entity;
+
+import javax.persistence.Entity;
+
+@Entity
+
+public class room {
+	
+}

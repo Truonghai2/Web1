@@ -1,0 +1,39 @@
+package websocket;
+
+
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.websocket.server.WebSocketHandler;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+
+public class WebSocketServer {
+	  public static void main(String[] args) {
+	        String destUri = "ws://localhost:8080";
+	        WebSocketClient client = new WebSocketClient();
+	        ChatWebSocket socket = new ChatWebSocket();
+
+	        try {
+	            client.start();
+	            URI echoUri = new URI(destUri);
+	            ClientUpgradeRequest request = new ClientUpgradeRequest();
+	            client.connect(socket, echoUri, request);
+	            System.out.println("Connecting to: " + destUri);
+
+	            Scanner scanner = new Scanner(System.in);
+	            while (true) {
+	                String message = scanner.nextLine();
+	                socket.sendMessage(message);
+	            }
+	        } catch (URISyntaxException e) {
+	            e.printStackTrace();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                client.stop();
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+}

@@ -1,0 +1,20 @@
+package Controll.DTO;
+
+public class NotificationsDTO {
+	private int id;
+    private String content;
+    private int type;
+    private int seen;
+    private int isActive;
+
+    // Add other necessary fields and getters/setters
+
+    public NotificationsDTO(Notifications notifications) {
+        this.id = notifications.getId();
+        this.content = notifications.getContent();
+        this.type = notifications.getType();
+        this.seen = notifications.getSeen();
+        this.isActive = notifications.getIsActive();
+        // Initialize other fields if necessary
+    }
+}

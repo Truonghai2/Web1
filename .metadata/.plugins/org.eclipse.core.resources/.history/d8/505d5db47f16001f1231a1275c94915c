@@ -1,0 +1,176 @@
+package Controll.Controller.Admin;
+
+import Controll.Contanst.SessionAtrr;
+import Controll.DTO.NotificationsDTO;
+import Controll.DTO.UserDTO;
+import Controll.Entity.Notifications;
+import Controll.Entity.User;
+import Controll.Service.Impl.NotificationServiceImp;
+import Controll.Service.Impl.UserServiceImpl;
+
+import Controll.Service.NotificationService;
+import Controll.Service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.hibernate.Hibernate;
+
+@WebServlet({ "/updateSeen", "/createNotifications", "/deleteNotifications", "/getNoti" })
+public class NotificationControllerAdmin extends HttpServlet {
+
+    private UserService userService = new UserServiceImpl();
+    private NotificationService notificationService = new NotificationServiceImp();
+    private Gson gson = new Gson();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getServletPath();
+
+        switch (path) {
+        
+        	case "/getNoti":
+        		doGetNotifications(request, response);
+        		break;
+            case "/updateSeen":
+                doGETupdateSeen(request, response);
+                break;
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getServletPath();
+        
+        switch (path) {
+            case "/createNotifications":
+                doPostcreateNotifications(request, response);
+                break;
+            case "/deleteNotifications":
+                doPostdeleteNotifications(request, response);
+                break;
+            default:
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                break;
+        }
+    }
+
+    
+    
+    protected void doGetPerPageNotification(HttpServletRequest req, HttpServletResponse res )throws ServletException, IOException{
+    	
+    	
+    	String page = req.getParameter("page");
+    	
+    	
+    	
+    }
+    
+    protected void doGetNotifications(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute(SessionAtrr.CURRENT_USER);
+		List<Notifications> notifications = notificationService.getALLNotificationByUserId(user.getId());
+		List<NotificationsDTO> object = NotificationsDTO.toDTOList(notifications);
+		String json = new Gson().toJson(object);
+		response.getWriter().write(json);
+		
+		
+	}
+    protected void doGETupdateSeen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Implementation for GET updateSeen
+    }
+
+    protected void doPostcreateNotifications(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String content = request.getParameter("content");
+        String type = request.getParameter("type");
+        String userId = request.getParameter("userid");
+        Gson gson = new Gson();
+        JsonObject json = new JsonObject();
+       
+
+        Notifications notifications = null;
+        User user = null;
+        try {
+            // Validate inputs
+            
+            int typeInt = Integer.parseInt(type);
+            if (typeInt != 0) {
+            	
+            	int userIdInt = Integer.parseInt(userId);
+                user = userService.findById(userIdInt);
+                
+                json.add("user", gson.toJsonTree(new UserDTO(user)));
+                notifications = notificationService.createNotification(user, content, typeInt);
+            } else {
+            	
+            	json.add("user", gson.toJsonTree(null));
+                notifications = notificationService.createNotificationNoUser(content, typeInt);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number format for type or userId");
+            return;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error creating notification");
+            return;
+        }
+
+        System.out.println("Notification created: " + notifications);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Convert the notification and user objects to JSON
+        
+        json.add("notification", gson.toJsonTree(new NotificationsDTO(notifications)));
+        
+       
+        
+
+        // Write the JSON string to the response
+        response.getWriter().write(json.toString());
+    }
+
+    protected void doPostdeleteNotifications(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+
+        boolean success = false;
+
+        if (id != null && id.length() > 0 ) {
+            try {
+                int notificationId = Integer.parseInt(id);
+                Notifications notifi = notificationService.deleteNotification(Integer.parseInt(id)); 
+                success = true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("success", success );
+        jsonResponse.addProperty("id", Integer.parseInt(id));
+        String json = new Gson().toJson(jsonResponse);
+        
+        
+        response.getWriter().write(json);
+    }
+
+}

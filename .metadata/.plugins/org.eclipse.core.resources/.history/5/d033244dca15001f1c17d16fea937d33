@@ -1,0 +1,5 @@
+package Controll.DTO;
+
+public class MessageDTO {
+
+}

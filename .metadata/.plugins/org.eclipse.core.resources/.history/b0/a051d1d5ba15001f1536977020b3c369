@@ -1,0 +1,5 @@
+package Controll.Dao.Impl;
+
+public class MessageDAOImp {
+
+}

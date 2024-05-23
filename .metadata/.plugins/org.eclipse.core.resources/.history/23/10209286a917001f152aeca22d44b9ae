@@ -1,0 +1,73 @@
+package websocket;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import Controll.Contanst.SessionAtrr;
+import Controll.Entity.User;
+import Controll.Entity.room;
+import Controll.Service.MessageService;
+import Controll.Service.RoomService;
+import Controll.Service.Impl.MessageServiceImp;
+import Controll.Service.Impl.RoomServiceImp;
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.PathParam;
+import jakarta.websocket.server.ServerEndpoint;
+
+@ServerEndpoint( value="/notifications/{room}", configurator = HttpSessionConfigurator.class)
+public class NotificationWebsocket {
+	
+	private static final Map<String, Set<Session>> rooms = Collections.synchronizedMap(new HashMap<>());
+	private RoomService roomService = new RoomServiceImp();
+	private MessageService messageService = new MessageServiceImp();
+	
+	
+	@OnOpen
+    public void handleOpen(Session session, @PathParam("room") String room, EndpointConfig config) {
+    	HttpSession httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+        if (httpSession != null) {
+            User user = (User) httpSession.getAttribute(SessionAtrr.CURRENT_USER);
+            if (user != null) {
+                session.getUserProperties().put("user", user);
+            }
+        }
+        session.getUserProperties().put("room", room);
+
+        rooms.putIfAbsent(room, Collections.synchronizedSet(new HashSet<>()));
+        rooms.get(room).add(session);
+
+        System.out.println("Session opened and bound to room: " + room);
+    }
+	
+	@OnMessage
+	public void handleMessage(String message, Session userSession) throws IOException {
+	    
+	}
+
+
+
+	@OnClose
+	public void handleClose(Session session) {
+        String room = (String) session.getUserProperties().get("room");
+        rooms.get(room).remove(session);
+        System.out.println("Session closed and removed from room: " + room);
+    }
+
+	@OnError
+	public void handleError(Throwable t) {
+		t.printStackTrace();
+	}
+}

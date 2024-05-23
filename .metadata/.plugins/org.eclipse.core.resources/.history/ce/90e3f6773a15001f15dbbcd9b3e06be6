@@ -1,0 +1,34 @@
+package Controll.Dao.Impl;
+
+import Controll.Dao.AbstactDao;
+import Controll.Dao.NotificationDao;
+import Controll.Entity.Hoadon;
+import Controll.Entity.Notifications;
+import Controll.Entity.Video;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
+
+public class NotificationsDaoImp extends AbstactDao<Notifications> implements NotificationDao {
+
+
+
+	@Override
+	
+	public List<Notifications> getALLNotificationByUserId(int id){
+		String sql = "";
+		return super.findMany(Notifications.class, sql, null);
+	}
+    @Override
+    public List<Notifications> findAll() {
+        return findAll(Notifications.class, true);
+    }
+
+    @Override
+    public Notifications getNotificationsByUserId(int userId){
+        String sql = "SELECT o FROM user WHERE id = ?o";
+        return super.findOne(Notifications.class, sql);
+    }
+}

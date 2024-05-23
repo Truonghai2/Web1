@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+
+.m-send{
+	font-size: 14px;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    outline: none;
+    resize: none;
+    
+    font-family: sans-serif;
+    height: 44px;
+    max-height: 200px;
+}
+
+.handleFIle{
+	border:none;
+	padding:0;
+}
+
+.messenger-sendCard button, .messenger-sendCard button:active, .messenger-sendCard button:focus{
+	    border: none;
+    outline: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+#message-form label{
+	margin:0;
+}
+
+.wrapper{
+	z-index:100;
+}
+
+.messenger-sendCard svg{
+	    margin: 9px 10px;
+    color: #bdcbd6;
+    cursor: pointer;
+    font-size: 21px;
+    transition: transform 0.15s;
+}

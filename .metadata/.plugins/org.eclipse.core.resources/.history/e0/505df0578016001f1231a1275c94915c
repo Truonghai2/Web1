@@ -1,0 +1,51 @@
+package Controll.Dao.Impl;
+
+import Controll.Dao.AbstactDao;
+import Controll.Dao.NotificationDao;
+import Controll.Entity.Hoadon;
+import Controll.Entity.Notifications;
+import Controll.Entity.Video;
+import Controll.Util.JPAUtil;
+
+import jakarta.persistence.*;
+import java.util.List;
+
+public class NotificationsDaoImp extends AbstactDao<Notifications> implements NotificationDao {
+
+
+	
+	@Override
+	public List<Notifications> perPage(int page, int size){
+		String sql = "SELECT o FROM Notifications o WHERE o.user.id = ?0 OR o.type = 0 ORDER BY o.addDate DESC";
+		return super.findPerPage(Notifications.class, sql, page, size);
+	}
+	@Override
+	public List<Notifications> getALLNotificationByUserId(int userId) {
+	    String jpql = "SELECT o FROM Notifications o WHERE o.user.id = ?0 OR o.type = 0 ORDER BY o.addDate DESC";
+	    return super.findMany(Notifications.class, jpql, userId);
+	}
+	
+	
+    @Override
+    public List<Notifications> findAll() {
+        return findAll(Notifications.class, true);
+    }
+
+    @Override
+    public Notifications getNotificationsByUserId(int userId){
+        String sql = "SELECT o FROM user WHERE id = ?o";
+        return super.findOne(Notifications.class, sql);
+    }
+    
+    @Override
+    public long countNotifications() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(o) FROM Notifications o";
+            Query query = em.createQuery(jpql);
+            return (long) query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+}

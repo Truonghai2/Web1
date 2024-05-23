@@ -1,0 +1,26 @@
+package Controll.Service.Impl;
+
+import java.util.List;
+
+import Controll.Dao.MessageDAO;
+import Controll.Dao.Impl.MessageDAOImp;
+import Controll.Entity.message;
+import Controll.Service.MessageService;
+
+public class MessageServiceImp implements MessageService{
+
+	
+	
+	private MessageDAO messageDAO;
+	
+	public MessageServiceImp() {
+		messageDAO = new MessageDAOImp();
+	}
+	@Override
+	public List<message> getALLMessageByRoomid(int roomId){
+		return messageDAO.getALLMessageByRoomid(roomId);
+	}
+	
+	
+	
+}

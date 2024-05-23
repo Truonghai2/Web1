@@ -1,0 +1,42 @@
+package websocket;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
+import jakarta.servlet.annotation.WebServlet;
+
+
+@ServerEndpoint("/chat")
+public class ChatRoomServerEndpoint {
+
+	@OnOpen
+    public void onOpen(Session session) {
+        // Handle opening of a new WebSocket connection
+        System.out.println("WebSocket connection opened: " + session.getId());
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) throws IOException {
+        // Handle receiving a message from a WebSocket client
+        System.out.println("Message received from " + session.getId() + ": " + message);
+        // Echo the message back to the client
+        session.getBasicRemote().sendText("Echo: " + message);
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        // Handle closing of a WebSocket connection
+        System.out.println("WebSocket connection closed: " + session.getId());
+    }
+
+}

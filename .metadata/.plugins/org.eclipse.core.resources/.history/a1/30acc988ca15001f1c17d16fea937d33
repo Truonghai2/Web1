@@ -1,0 +1,13 @@
+package Controll.DTO;
+
+import Controll.Entity.User;
+
+import Controll.Entity.room;
+public class MessageDTO {
+
+	
+	private int id;
+	private room room;
+	private User user;
+	
+}

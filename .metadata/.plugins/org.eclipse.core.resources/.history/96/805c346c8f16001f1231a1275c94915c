@@ -1,0 +1,21 @@
+package Controll.Service;
+
+import Controll.Entity.Notifications;
+import Controll.Entity.User;
+
+import java.util.List;
+
+public interface NotificationService {
+
+	List<Notifications> perPage(int page, int size);
+    List<Notifications> getAllNotifications();
+    List<Notifications> getALLNotificationByUserId(int id);
+    Notifications getNotificationsByUserId(int userId);
+    Notifications createNotification(User user, String content, int type);
+    Notifications createNotificationNoUser(String content, int type);
+
+    Notifications deleteNotification(Integer notificationId);
+
+    Notifications updateSeen(int notificationid);
+    long cntNoti();
+}

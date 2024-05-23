@@ -1,0 +1,9 @@
+package Controll.Dao.Impl;
+
+import Controll.Dao.AbstactDao;
+import Controll.Dao.MessageDAO;
+import Controll.Entity.message;
+
+public class MessageDAOImp extends AbstactDao<message> implements MessageDAO{
+
+}

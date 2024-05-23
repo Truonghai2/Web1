@@ -1,0 +1,15 @@
+package Controll.Service.Impl;
+
+import java.util.List;
+
+import Controll.Entity.message;
+import Controll.Service.MessageService;
+
+public class MessageServiceImp implements MessageService{
+
+	
+	@Override
+	List<message> getALLMessageByRoomid(int roomId){
+		
+	}
+}

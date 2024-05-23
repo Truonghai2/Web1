@@ -1,0 +1,7 @@
+package Controll.DTO;
+
+public class MessageDTO {
+
+	
+	private int id;
+}

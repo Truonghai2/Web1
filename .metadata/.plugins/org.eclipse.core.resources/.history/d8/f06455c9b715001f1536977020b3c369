@@ -1,0 +1,8 @@
+package Controll.Entity;
+
+import javax.persistence.*;
+@Entity
+@Table(name = "")
+public class room {
+	
+}

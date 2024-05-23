@@ -1,0 +1,5 @@
+package Controll.Service.Impl;
+
+public class MessageServiceImp {
+
+}

@@ -1,0 +1,42 @@
+package websocket;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.websocket.Endpoint;
+
+
+@WebServlet("/chat")
+
+public class ChatRoomServerEndpoint extends Endpoint {
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+        session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String message) {
+                try {
+                    // Broadcast message to all connected clients
+                    for (Session s : session.getOpenSessions()) {
+                        if (s.isOpen()) {
+                            s.getBasicRemote().sendText(message);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+}

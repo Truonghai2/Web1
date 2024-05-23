@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+
+.m-send{
+	font-size: 14px;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    outline: none;
+    resize: none;
+    
+    font-family: sans-serif;
+    height: 44px;
+    max-height: 200px;
+}
+
+.handleFIle{
+	border:none;
+	padding:0;
+}
+
+.messenger-sendCard button, .messenger-sendCard button:active, .messenger-sendCard button:focus{
+	
+}

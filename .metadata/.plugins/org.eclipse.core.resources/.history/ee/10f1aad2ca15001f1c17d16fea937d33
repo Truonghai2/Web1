@@ -1,0 +1,24 @@
+package Controll.DTO;
+
+import java.sql.Timestamp;
+
+import Controll.Entity.User;
+
+import Controll.Entity.room;
+
+
+public class MessageDTO {
+
+	
+	private int id;
+	private room room;
+	private User user;
+	
+	private String body;
+	private String link;
+	
+	private Timestamp created_at;
+	
+	public 
+	
+}

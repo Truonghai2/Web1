@@ -1,0 +1,47 @@
+package websocket;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
+import jakarta.servlet.annotation.WebServlet;
+
+
+@WebServlet("/chat");
+@ServerEndpoint("/chat")
+public class ChatRoomServerEndpoint {
+
+    @OnOpen
+    public void onOpen(Session session) {
+        // Handle new WebSocket connection
+        System.out.println("WebSocket connection opened: " + session.getId());
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        // Handle incoming messages
+        System.out.println("Received message: " + message);
+        // Implement your chat logic here (e.g., broadcasting messages to other clients)
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        // Handle WebSocket connection closing
+        System.out.println("WebSocket connection closed: " + session.getId());
+    }
+
+    @OnError
+    public void onError(Throwable throwable) {
+        // Handle WebSocket errors
+        System.err.println("WebSocket error: " + throwable.getMessage());
+    }
+}

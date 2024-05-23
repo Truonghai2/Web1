@@ -1,0 +1,9 @@
+package Controll.DTO;
+
+public class MessageDTO {
+
+	
+	private int id;
+	private Controll.Entity.room room;
+	private User user;
+}

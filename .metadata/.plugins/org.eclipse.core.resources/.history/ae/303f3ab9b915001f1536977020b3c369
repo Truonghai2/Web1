@@ -1,0 +1,5 @@
+package Controll.Service;
+
+public interface MessageService {
+
+}

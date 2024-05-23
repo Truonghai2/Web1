@@ -1,0 +1,5 @@
+package Controll.Dao;
+
+public interface RoomDAO {
+	room find(int id);
+}

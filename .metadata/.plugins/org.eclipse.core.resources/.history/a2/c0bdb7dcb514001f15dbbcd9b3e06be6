@@ -1,0 +1,16 @@
+package Controll.Dao;
+
+import Controll.Entity.Notifications;
+
+import java.util.List;
+
+public interface NotificationDao {
+
+    List<Notifications> findAll();
+
+    Notifications getNotificationsByUserId(int userId);
+    Notifications create(Notifications notification);
+    Notifications update(Notifications notification);
+    bool delete(Notifications notification);
+
+}

@@ -1,0 +1,40 @@
+package Controll.DTO;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import Controll.Entity.Notifications;
+import Controll.Entity.User;
+
+public class NotificationsDTO {
+	private int id;
+    private String content;
+  
+    private int type;
+    private int seen;
+    private int isActive;
+    private Timestamp addDate;
+    
+
+    
+    
+    // Add other necessary fields and getters/setters
+
+    public NotificationsDTO(Notifications notifications) {
+        this.id = notifications.getId();
+        this.content = notifications.getContent();
+        this.type = notifications.getType();
+        this.seen = notifications.getSeen();
+        this.isActive = notifications.getIsActive();
+        this.addDate = notifications.getAddDate();
+    }
+    
+//    public static List<NotificationsDTO> toDTOList(List<Notifications> notificationsList) {
+//        List<NotificationsDTO> dtoList = new ArrayList<>();
+//        for (Notifications notification : notificationsList) {
+//            dtoList.add(new NotificationsDTO(notification));
+//        }
+//        return dtoList;
+//    }
+}

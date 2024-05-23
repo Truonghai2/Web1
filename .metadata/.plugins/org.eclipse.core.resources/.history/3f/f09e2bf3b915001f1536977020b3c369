@@ -1,0 +1,9 @@
+package Controll.Service;
+
+import java.util.List;
+
+import Controll.Entity.message;
+
+public interface MessageService {
+	List<message> message =  
+}

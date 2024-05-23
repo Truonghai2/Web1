@@ -1,0 +1,11 @@
+package Controll.DTO;
+
+public class UserDTO {
+	private Integer id;
+	private String fullname;
+	
+	
+	
+	public UserDTO(User user)Ơ
+	
+}
